@@ -27,6 +27,15 @@
 	</h:form>
 
 	<div align="center">
+		<h:form id="notificacionesForm">
+	        <!-- Área donde se mostrará la notificación -->
+	        
+	        <p:growl id="growl" showDetail="false">
+				<p:autoUpdate />
+			</p:growl>
+	        <!-- Polling para verificar nuevas notificaciones -->
+	        <p:poll interval="5" listener="#{beanNotificaciones.mostrarNotificacionEnJSF()}" update="growl"/>
+	    </h:form>
 		<h:form>
 			<p:panel style="width:50%">
 				<p:staticMessage severity="info" summary="SISTEMA MINIMARKETDEMO"
