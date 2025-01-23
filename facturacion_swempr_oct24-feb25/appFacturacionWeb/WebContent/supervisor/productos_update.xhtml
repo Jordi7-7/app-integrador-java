@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Insert title here</title>
+</h:head>
+<body>
+	<p:panel header="Actualización de producto">
+		<h:form>
+			<p:panelGrid columns="3" id="panelGrid1">
+				<h:outputText value="ID:" />
+				<h:panelGroup>
+					<h:outputText value="#{beanProductos.codigoProducto}" />
+					<h:inputHidden value="#{beanProductos.codigoProducto}" />
+				</h:panelGroup>  
+				<h:outputText value="" />
+				<h:outputText value="NOMBRE:" />
+				<p:inputText id="nombre" value="#{beanProductos.nombre}" required="true"
+					requiredMessage="Debe ingresar un nombre." ></p:inputText>
+				<p:message for="nombre" />
+				<h:outputText value="DESCRIPCION:" />
+				<p:inputText id="descripcion" value="#{beanProductos.descripcion}" required="true"
+					requiredMessage="Debe ingresar una descripción." ></p:inputText>
+				<p:message for="descripcion" />
+				<h:outputText value="PRECIO:" />
+				<p:spinner id="precio" value="#{beanProductos.precioUnitario}" stepFactor="0.01" required="true"
+					requiredMessage="Debe ingresar un valor."
+					min="0.01" validatorMessage="El precio debe ser mayor que cero." />
+				<p:message for="precio" />
+				<h:outputText value="EXISTENCIA:" />
+				<p:spinner id="existencia" value="#{beanProductos.existencia}" min="0" required="true"
+					requiredMessage="Debe ingresar existencias." />
+				<p:message for="existencia" />
+				<h:outputText value="TIENE IMPUESTO:" />
+				<p:selectOneMenu value="#{beanProductos.tieneImpuesto}">
+					<f:selectItem itemLabel="SI" itemValue="S" />
+					<f:selectItem itemLabel="NO" itemValue="N" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+			<p:commandButton value="Actualizar"
+				action="#{beanProductos.actionActualizarProducto()}"
+				update="panelGrid1"></p:commandButton>
+		</h:form>
+	</p:panel>
+</body>
+</html>

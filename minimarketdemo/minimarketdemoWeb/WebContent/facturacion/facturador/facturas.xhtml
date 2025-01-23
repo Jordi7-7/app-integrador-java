@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{beanSegLogin.actionVerificarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Facturas</title>
+</h:head>
+<body>
+	<p:growl>
+		<p:autoUpdate />
+	</p:growl>
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Regresar" icon="pi pi-home" action="menu" />
+			<f:facet name="options">
+				<p:menuButton value="#{beanSegLogin.loginDTO.correo}"
+					icon="pi pi-user">
+					<p:menuitem value="Perfil" icon="pi pi-cog"></p:menuitem>
+					<p:menuitem value="Cerrar sesión" icon="pi pi-sign-out"
+						action="#{beanSegLogin.actionCerrarSesion()}"></p:menuitem>
+				</p:menuButton>
+			</f:facet>
+		</p:menubar>
+	</h:form>
+	<p:panel>
+		<h1>Facturas por anio</h1>
+		<h:form id="formDatos">
+			<p:dataTable value="#{beanFacturas.listaFacturaAnio}" var="fa"
+				paginator="true" rows="15" emptyMessage="No hay registros aún.">
+				<p:column headerText="ANIO">
+					<h:outputText value="#{fa.anio}" />
+				</p:column>
+				<p:column headerText="FACTURAS EMITIDAS">
+					<h:outputText value="#{fa.facEmitidas}" />
+				</p:column>
+				<p:column headerText="TOTALES">
+					<h:outputText value="#{fa.valoresTotales}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+	<p:panel>
+		<h1>Facturas por mes</h1>
+		<h:form id="formDatos1">
+			<p:dataTable value="#{beanFacturas.listaFacturaMes}" var="fm"
+				paginator="true" rows="15" emptyMessage="No hay registros aún.">
+				<p:column headerText="FACTURAS EMITIDAS">
+					<h:outputText value="#{fm.facEmitidas}" />
+				</p:column>
+				<p:column headerText="TOTALES">
+					<h:outputText value="#{fm.valoresTotales}" />
+				</p:column>
+				<p:column headerText="MES">
+					<h:outputText value="#{fm.mes}" />
+				</p:column>
+				<p:column headerText="ANIO">
+					<h:outputText value="#{fm.anio}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:barChart id="barChart" model="#{beanFacturas.barModel}"
+			style="width:80%; height:500px;" />
+	</p:panel>
+	<p:panel>
+		<h1>Estado de Pedidos</h1>
+		<h:form id="formDatos2">
+			<p:dataTable value="#{beanFacturas.listaPedido}" var="p"
+				paginator="true" rows="15" emptyMessage="No hay registros aún.">
+				<p:column headerText="PEDIDOS DESPACHADOS">
+					<h:outputText value="#{p.pedidosDespachados}" />
+				</p:column>
+				<p:column headerText="PEDIDOS PENDIENTES">
+					<h:outputText value="#{p.pedidosPendientes}" />
+				</p:column>
+				<p:column headerText="TOTALES">
+					<h:outputText value="#{p.valoresTotales}" />
+				</p:column>
+				<p:column headerText="MES">
+					<h:outputText value="#{p.mes}" />
+				</p:column>
+				<p:column headerText="ANIO">
+					<h:outputText value="#{p.anio}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+
+</body>
+</html>
