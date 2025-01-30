@@ -76,7 +76,7 @@ public class ManagerPedidos {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PedidoCab> findAllPedidoCab() {
-		List<PedidoCab> listado=managerDAO.findAll(PedidoCab.class, "o.numeroPedido asc");
+		List<PedidoCab> listado=managerDAO.findAll(PedidoCab.class, "o.numeroPedido desc");
 		//recorremos los pedidos para extraer los datos de los detalles:
 		for(PedidoCab pc:listado){
 			for(PedidoDet pd:pc.getPedidoDets()){
@@ -114,7 +114,7 @@ public class ManagerPedidos {
 			//Debido a que son insuficientes los metodos genericos de ManagerDAO,
 			//creamos un nuevo Query:
 			EntityManager em=managerDAO.getEntityManager();
-			String sql="SELECT p FROM PedidoCab p WHERE p.fechaPedido between :fechaInicio and :fechaFinal order by p.numeroPedido asc";
+			String sql="SELECT p FROM PedidoCab p WHERE p.fechaPedido between :fechaInicio and :fechaFinal order by p.numeroPedido desc";
 			Query query=em.createQuery(sql);
 			//pasamos los parametros a la consulta:
 			query.setParameter("fechaInicio",fechaInicio,TemporalType.DATE);

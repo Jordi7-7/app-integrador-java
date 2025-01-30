@@ -32,9 +32,12 @@
 			<h:outputText value="" />
 			<p:calendar value="#{beanSupervisor.fechaInicio}" />
 			<p:calendar value="#{beanSupervisor.fechaFinal}" />
-			<p:commandButton icon="pi pi-search" value="Buscar" update=":mensajes, :form2:panel1" action="#{beanSupervisor.actionBuscar()}" />
+			<p:commandButton icon="pi pi-search" value="Buscar"
+				update=":mensajes, :form2:panel1"
+				action="#{beanSupervisor.actionBuscar()}" />
 			<p:commandButton icon="pi pi-eraser" value="Borrar Filtros"
-				update=":form2:panel1 :form1" action="#{beanSupervisor.actionBorrarFiltros()}" />	
+				update=":form2:panel1 :form1"
+				action="#{beanSupervisor.actionBorrarFiltros()}" />
 
 		</p:panelGrid>
 	</h:form>
@@ -43,16 +46,20 @@
 	<p:messages id="mensajes" autoUpdate="true" />
 	<h:form id="form2">
 		<p:panel header="Resultado de la búsqueda:" id="panel1">
-				<h:form id="formExport">
-        			<p:commandButton icon="pi pi-file" value="Exportar a CSV" ajax="false">
-        				<p:dataExporter type="csv" target=":form2:dataTable" fileName="Pedidos" />
-    				</p:commandButton>
-    				<p:commandButton icon="pi pi-file-excel" value="Exportar a Excel" ajax="false">
-        				<p:dataExporter type="xls" target=":form2:dataTable" fileName="Pedidos" />
-    				</p:commandButton>
-				</h:form>
-			<p:dataTable id="dataTable" value="#{beanSupervisor.listaPedidoCab}" var="pc"
-				paginator="true" rows="15">
+			<h:form id="formExport">
+				<p:commandButton icon="pi pi-file" value="Exportar a CSV"
+					ajax="false">
+					<p:dataExporter type="csv" target=":form2:dataTable"
+						fileName="Pedidos" />
+				</p:commandButton>
+				<p:commandButton icon="pi pi-file-excel" value="Exportar a Excel"
+					ajax="false">
+					<p:dataExporter type="xls" target=":form2:dataTable"
+						fileName="Pedidos" />
+				</p:commandButton>
+			</h:form>
+			<p:dataTable id="dataTable" value="#{beanSupervisor.listaPedidoCab}"
+				var="pc" paginator="true" rows="15">
 				<p:column headerText="NUM PEDIDO">
 					<h:outputText value="#{pc.numeroPedido}" />
 				</p:column>
@@ -76,22 +83,29 @@
 						oncomplete="PF('dialogo1').show()" />
 				</p:column>
 				<p:column headerText="DESPACHAR">
-					<p:commandButton update=":form2:menuConfirmar"
-						action="#{beanSupervisor.actionCargarPedido(pc)}"
-						icon="pi pi-check" oncomplete="PF('menu').show()"
-						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}"  />
+					<!-- 					<p:commandButton update=":form2:menuConfirmar" -->
+					<!-- 						action="#{beanSupervisor.actionCargarPedido(pc)}" -->
+					<!-- 						icon="pi pi-check" oncomplete="PF('menu').show()" -->
+					<!-- 						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}" /> -->
+
+					<p:commandButton value="Pagar Pedido" icon="pi pi-credit-card"
+						action="#{beanPagoTarjeta.actionCargarPedido(pc)}"
+						oncomplete="PF('dlgPago').show()"
+						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}" />
+
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<p:confirmDialog 
-				message="¿Seguro deseas despachar el pedido #{beanSupervisor.pedidoCabTmp.numeroPedido}?" 
-				header="Despachar pedido" 
-				severity="alert" 
-				widgetVar="menu"
-				id="menuConfirmar">
-        			<p:commandButton value="Confirmar" action="#{beanSupervisor.actionDespacharPedido(beanSupervisor.pedidoCabTmp)}" update=":form2:panel1,:mensajes" oncomplete="PF('menu').hide()"/>
-        			<p:commandButton value="Cancelar" onclick="PF('menu').hide();" type="button" />
-    	</p:confirmDialog>
+		<p:confirmDialog
+			message="¿Seguro deseas despachar el pedido #{beanSupervisor.pedidoCabTmp.numeroPedido}?"
+			header="Despachar pedido" severity="alert" widgetVar="menu"
+			id="menuConfirmar">
+			<p:commandButton value="Confirmar"
+				action="#{beanSupervisor.actionDespacharPedido(beanSupervisor.pedidoCabTmp)}"
+				update=":form2:panel1,:mensajes" oncomplete="PF('menu').hide()" />
+			<p:commandButton value="Cancelar" onclick="PF('menu').hide();"
+				type="button" />
+		</p:confirmDialog>
 		<p:dialog header="INFORMACIÓN" widgetVar="dialogo1" modal="true"
 			id="dlg1">
 			<p:panel id="detallePedido" header="Información del pedido"
@@ -136,5 +150,69 @@
 			</p:panel>
 		</p:dialog>
 	</h:form>
+
+
+
+	<p:dialog header="Realizar Pago" widgetVar="dlgPago" modal="true"
+		resizable="false" closable="true" draggable="false"
+		style="width: 400px;">
+		<h:form id="formPagoTarjeta">
+			<!-- Radio Button para seleccionar el método de pago -->
+			<p:panel header="Seleccionar Método de Pago"
+				style="margin-bottom: 10px;">
+				<p:selectOneRadio id="metodoPago"
+					value="#{beanPagoTarjeta.metodoPago}" layout="grid">
+					<f:selectItem itemLabel="Tarjeta de Crédito" itemValue="TARJETA" />
+					<f:selectItem itemLabel="Efectivo" itemValue="EFECTIVO" />
+					<p:ajax event="change" process="@this" update="formPagoTarjeta" />
+				</p:selectOneRadio>
+			</p:panel>
+			<p:messages id="mensajes" autoUpdate="true" closable="true"
+				showSummary="true" />
+			<p:growl id="growl" showDetail="true" autoUpdate="true" />
+
+			<p:panelGrid columns="2"
+				rendered="#{beanPagoTarjeta.metodoPago == 'TARJETA'}"
+				style="width: 100%;">
+				<p:outputLabel for="numeroTarjeta" value="Número de Tarjeta:" />
+				<p:inputText id="numeroTarjeta"
+					value="#{beanPagoTarjeta.numeroTarjeta}" required="true" />
+
+				<p:outputLabel for="mesVencimiento" value="Mes de Vencimiento:" />
+				<p:inputText id="mesVencimiento"
+					value="#{beanPagoTarjeta.mesVencimiento}" maxlength="2"
+					required="true" />
+
+				<p:outputLabel for="anioVencimiento" value="Año de Vencimiento:" />
+				<p:inputText id="anioVencimiento"
+					value="#{beanPagoTarjeta.anioVencimiento}" maxlength="4"
+					required="true" />
+
+				<p:outputLabel for="cvv" value="CVV:" />
+				<p:password id="cvv" value="#{beanPagoTarjeta.cvv}" maxlength="3"
+					required="true" />
+
+				<p:outputLabel for="titular" value="Titular de la Tarjeta:" />
+				<p:inputText id="titular" value="#{beanPagoTarjeta.titular}"
+					required="true" />
+			</p:panelGrid>
+
+			<!-- Botón Confirmar Pago -->
+			<p:separator />
+			<p:commandButton value="Confirmar Pago"
+				action="#{beanPagoTarjeta.PagoTarjetaConAPI()}"
+				rendered="#{beanPagoTarjeta.metodoPago == 'TARJETA'}"
+				oncomplete="#{beanPagoTarjeta.tipoMensaje.equals('approved') ? 'PF(\'dlgPago\').hide();' : ''}"
+				update="mensajes growl formPagoTarjeta :form2:panel1,:mensajes" />
+
+			<p:commandButton id="despacharPedidoButton" value="Despachar Pedido"
+				action="#{beanSupervisor.actionDespacharPedido(beanPagoTarjeta.pedidoCabTmp)}"
+				rendered="#{beanPagoTarjeta.metodoPago == 'EFECTIVO'}"
+				update=":form2:panel1,:mensajes" oncomplete="PF('dlgPago').hide();" />
+		</h:form>
+	</p:dialog>
+
+
+
 </body>
 </html>
