@@ -24,7 +24,7 @@ public class BeanPagoTarjeta implements Serializable {
 
 	@Inject
 	private BeanSupervisor beanSupervisor;
-	
+
 	private String numeroTarjeta;
 	private Integer mesVencimiento;
 	private Integer anioVencimiento;
@@ -108,17 +108,18 @@ public class BeanPagoTarjeta implements Serializable {
 			System.out.println("Message: " + message);
 			System.out.println("Status: " + status);
 
-			if (status.equals("approved")) {
-				System.out.println("dentre a approved: " + status);
-				beanSupervisor.actionDespacharPedido(pedidoCabTmp);
-
-				tipoMensaje = "approved";
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Resultado de la transaccion: " + status, message));
-		        FacesContext.getCurrentInstance()
-	            .getPartialViewContext()
-	            .getEvalScripts()
-	            .add("PF('dlgPago').hide();");
+			if (status.equals("approved") || status.equals("pending")) {
+				tipoMensaje = status;
+				if (status.equals("approved")) {
+					beanSupervisor.actionDespacharPedido(pedidoCabTmp);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Resultado de la transaccion: " + status, message));
+					FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("PF('dlgPago').hide();");
+				}else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+							"Resultado de la transaccion: " + status, message));
+					FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("PF('dlgPago').hide();");
+				}
 			} else {
 				tipoMensaje = "error";
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
