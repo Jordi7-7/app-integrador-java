@@ -164,9 +164,12 @@
 					value="#{beanPagoTarjeta.metodoPago}" layout="grid">
 					<f:selectItem itemLabel="Tarjeta de Crédito" itemValue="TARJETA" />
 					<f:selectItem itemLabel="Efectivo" itemValue="EFECTIVO" />
-					 <p:ajax event="change" process="@this" update="formPagoTarjeta" />
+					<p:ajax event="change" process="@this" update="formPagoTarjeta" />
 				</p:selectOneRadio>
 			</p:panel>
+			<p:messages id="mensajes" autoUpdate="true" closable="true"
+				showSummary="true" />
+			<p:growl id="growl" showDetail="true" autoUpdate="true" />
 
 			<p:panelGrid columns="2"
 				rendered="#{beanPagoTarjeta.metodoPago == 'TARJETA'}"
@@ -199,8 +202,10 @@
 			<p:commandButton value="Confirmar Pago"
 				action="#{beanPagoTarjeta.PagoTarjetaConAPI()}"
 				rendered="#{beanPagoTarjeta.metodoPago == 'TARJETA'}"
-				oncomplete="PF('dlgPago').hide();" />
-			<p:commandButton value="Despachar Pedido"
+				oncomplete="#{beanPagoTarjeta.tipoMensaje.equals('approved') ? 'PF(\'dlgPago\').hide();' : ''}"
+				update="mensajes growl formPagoTarjeta :form2:panel1,:mensajes" />
+
+			<p:commandButton id="despacharPedidoButton" value="Despachar Pedido"
 				action="#{beanSupervisor.actionDespacharPedido(beanPagoTarjeta.pedidoCabTmp)}"
 				rendered="#{beanPagoTarjeta.metodoPago == 'EFECTIVO'}"
 				update=":form2:panel1,:mensajes" oncomplete="PF('dlgPago').hide();" />
