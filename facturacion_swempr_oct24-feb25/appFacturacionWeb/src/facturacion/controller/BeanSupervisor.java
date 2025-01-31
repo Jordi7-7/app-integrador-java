@@ -64,9 +64,19 @@ public class BeanSupervisor implements Serializable {
 	public boolean despachado(String des) {
 	    return "Pedido despachado".equalsIgnoreCase(des != null ? des : "");
 	}
-
+	public boolean pendiente(String pen) {
+	    return "Pedido pendiente".equalsIgnoreCase(pen != null ? pen : "");
+	}
 	
-	
+	public String actionCambiarEstadoApendiente(PedidoCab pedidoCab) {
+		try {
+			managerPedidos.cambiarEstado(pedidoCab.getNumeroPedido());
+		} catch (Exception e) {
+			e.printStackTrace();
+			JSFUtil.crearMensajeERROR(e.getMessage());
+		}
+		return "";
+	}
 	
 	public String actionDespacharPedido(PedidoCab pedidoCab){
 		try {

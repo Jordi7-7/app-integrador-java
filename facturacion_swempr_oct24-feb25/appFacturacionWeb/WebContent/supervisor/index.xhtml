@@ -44,6 +44,8 @@
 	<br />
 
 	<p:messages id="mensajes" autoUpdate="true" />
+	
+	
 	<h:form id="form2">
 		<p:panel header="Resultado de la búsqueda:" id="panel1">
 			<h:form id="formExport">
@@ -91,7 +93,15 @@
 					<p:commandButton value="Pagar Pedido" icon="pi pi-credit-card"
 						action="#{beanPagoTarjeta.actionCargarPedido(pc)}"
 						oncomplete="PF('dlgPago').show()"
-						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}" />
+						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}"
+						rendered="#{!beanSupervisor.pendiente(pc.estadoPedido.descripcionEstado)}" 
+					/>
+					<p:commandButton value="Actualizar estado" icon="pi pi-credit-card"
+						action="#{beanPagoTarjeta.actualizarEstadoTransaccion(pc)}"
+						disabled="#{beanSupervisor.despachado(pc.estadoPedido.descripcionEstado)}"
+						rendered="#{beanSupervisor.pendiente(pc.estadoPedido.descripcionEstado)}" 
+						update=":form2:panel1,:mensajes" 
+					/>
 
 				</p:column>
 			</p:dataTable>

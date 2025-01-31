@@ -333,4 +333,16 @@ public class ManagerPedidos {
 				this.getClass().toString()+"/despacharPedido()", 
 				"pista de auditoria, pedido despachado nro: "+pedidoCab.getNumeroPedido());
 	}
+	
+	public void cambiarEstado(Integer numeroPedido) throws Exception {
+		PedidoCab pedidoCab=findPedidoCabById(numeroPedido);
+		if(pedidoCab.getEstadoPedido().getIdEstadoPedido().equals("OK"))
+			throw new Exception("Ya fue despachado el pedido.");
+		if(pedidoCab.getEstadoPedido().getIdEstadoPedido().equals("AN"))
+			throw new Exception("No puede despachar un pedido anulado.");
+		
+		EstadoPedido estado=findEstadoPedidoById("PE");
+		pedidoCab.setEstadoPedido(estado);
+		managerDAO.actualizar(pedidoCab);
+	}
 }
