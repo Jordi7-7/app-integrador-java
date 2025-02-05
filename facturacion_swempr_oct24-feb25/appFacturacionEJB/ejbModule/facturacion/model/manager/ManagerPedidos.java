@@ -317,6 +317,7 @@ public class ManagerPedidos {
 	public void despacharPedido(String idUsuario,Integer numeroPedido) throws Exception{
 		//recuperamos la informacion del pedido:
 		PedidoCab pedidoCab=findPedidoCabById(numeroPedido);
+		System.out.print(pedidoCab.toString());
 		if(pedidoCab.getEstadoPedido().getIdEstadoPedido().equals("OK"))
 			throw new Exception("Ya fue despachado el pedido.");
 		if(pedidoCab.getEstadoPedido().getIdEstadoPedido().equals("AN"))

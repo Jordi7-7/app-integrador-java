@@ -11,6 +11,8 @@ import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import org.primefaces.PrimeFaces;
+
 import facturacion.model.dao.entities.PedidoCab;
 
 @Named
@@ -18,7 +20,7 @@ import facturacion.model.dao.entities.PedidoCab;
 public class BeanPagoTarjeta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String apiUrl = "https://127.0.0.1:3000";
+	private String apiUrl = "https://172.20.10.3:3000";
 	private String apiKey = "token123";
 
 	@Inject
@@ -58,7 +60,7 @@ public class BeanPagoTarjeta implements Serializable {
 	        System.out.println("Status: " + status);
 
 	        if(status.equals("pending")) {
-	            JSFUtil.crearMensajeWARN("Transacción pendiente!");
+	            JSFUtil.crearMensajeWARN("Transacción pendiente!");	            
 	            return;
 	        }
 
@@ -68,40 +70,15 @@ public class BeanPagoTarjeta implements Serializable {
 	        }
 
 	        if(status.equals("approved")) {
-	            this.actualizarCreditoAPI(numeroTarjeta, pedidoCabTmp.getSubtotal());
-	            beanSupervisor.actionDespacharPedido(pedidoCabTmp);
-	            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-	                    "Resultado de la transaccion: " + status, "Transacción aprobada"));
+	            PrimeFaces.current().executeScript("PF('menu').show();");
+	            JSFUtil.crearMensajeINFO("Estado aprobado!");
+	            return;
 	        }
 	    } catch (Exception e) {
 	    	JSFUtil.crearMensajeERROR("Error: "+e.getMessage());
 	        e.printStackTrace();
 	        
 	    }
-	}
-
-
-	private void actualizarCreditoAPI(String numeroTarjeta, BigDecimal monto) {
-		try {
-			JsonObject jsonPayload = Json.createObjectBuilder().add("cardNumber", numeroTarjeta)
-					.add("amount", pedidoCabTmp.getSubtotal()).build();
-
-			
-			JsonObject jsonObject = this.api.postData(this.apiUrl+"/card/consume", jsonPayload);			
-
-			// Extraer los valores "message" y "status"
-			String message = jsonObject.getString("card_id", "No se encontró el mensaje.");
-			String status = jsonObject.getString("owner", "No se encontró el estado.");
-
-			// Mostrar en consola los valores extraídos
-			System.out.println("Message: " + message);
-			System.out.println("Status: " + status);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			mensajeRespuesta = "Error al procesar el pago." + e.getMessage();
-			addMessage(FacesMessage.SEVERITY_ERROR, "Error", mensajeRespuesta);
-		}
 	}
 
 	public void PagoTarjetaConAPI() {
