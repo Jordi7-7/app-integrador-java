@@ -346,4 +346,11 @@ public class ManagerPedidos {
 		pedidoCab.setEstadoPedido(estado);
 		managerDAO.actualizar(pedidoCab);
 	}
+	
+	public void cambiarEstadoNuevo(Integer numeroPedido) throws Exception {
+		PedidoCab pedidoCab=findPedidoCabById(numeroPedido);
+		EstadoPedido estado=findEstadoPedidoById("NV");
+		pedidoCab.setEstadoPedido(estado);
+		managerDAO.actualizar(pedidoCab);
+	}
 }

@@ -78,6 +78,16 @@ public class BeanSupervisor implements Serializable {
 		return "";
 	}
 	
+	public String actionCambiarEstadoANuevo(PedidoCab pedidoCab) {
+		try {
+			managerPedidos.cambiarEstadoNuevo(pedidoCab.getNumeroPedido());
+		} catch (Exception e) {
+			e.printStackTrace();
+			JSFUtil.crearMensajeERROR(e.getMessage());
+		}
+		return "";
+	}
+	
 	public String actionDespacharPedido(PedidoCab pedidoCab){
 		try {
 			//invocamos a ManagerFacturacion para crear una nueva factura:

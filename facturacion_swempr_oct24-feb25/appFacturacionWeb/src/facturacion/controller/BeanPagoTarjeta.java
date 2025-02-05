@@ -20,7 +20,7 @@ import facturacion.model.dao.entities.PedidoCab;
 public class BeanPagoTarjeta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String apiUrl = "https://172.20.10.3:3000";
+	private String apiUrl = "http://localhost:3000";
 	private String apiKey = "token123";
 
 	@Inject
@@ -64,8 +64,10 @@ public class BeanPagoTarjeta implements Serializable {
 	            return;
 	        }
 
-	        if(status.equals("failure")) {
-	            JSFUtil.crearMensajeERROR("Transacción fallida!");
+	        if(status.equals("rejected")) {
+	            JSFUtil.crearMensajeERROR("Transacción rechazada!");
+	            //Volver el pedido a estado Nuevo Pedido
+				beanSupervisor.actionCambiarEstadoANuevo(pedidoCabTmp);
 	            return;
 	        }
 
